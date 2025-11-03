@@ -24,6 +24,8 @@ public class HotelDto {
     
     @Data
     public static class RoomTypeDto {
+        // 房型ID
+        private Integer id;
         // 房型名称
         private String roomType;
         // 房间号
