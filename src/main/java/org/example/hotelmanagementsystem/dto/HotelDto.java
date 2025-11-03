@@ -21,8 +21,6 @@ public class HotelDto {
     private String status = "active";
     // 房型列表
     private List<RoomTypeDto> roomTypes;
-    // 图片列表
-    private List<String> images;
     
     @Data
     public static class RoomTypeDto {
