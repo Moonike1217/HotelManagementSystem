@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.hotelmanagementsystem.mapper.BookingMapper">
+
+    <select id="findAvailableRooms" resultType="org.example.hotelmanagementsystem.dto.AvailableRoomDto">
+        SELECT r.id, r.hotel_id, h.name AS hotelName, h.address AS hotelAddress,
+        r.room_type, r.room_number, r.price
+        FROM rooms r
+        JOIN hotels h ON r.hotel_id = h.id
+        WHERE r.status = 'available'
+        AND r.id NOT IN (
+        SELECT room_id FROM orders
+        WHERE status IN ('pending', 'confirmed', 'checked_in')
+        AND ((check_in_date &lt; #{checkOutDate} AND check_out_date &gt; #{checkInDate}))
+        )
+        <if test='location != null and location != ""'>
+            AND h.address LIKE CONCAT('%', #{location}, '%')
+        </if>
+        <if test='roomType != null and roomType != ""'>
+            AND r.room_type = #{roomType}
+        </if>
+        <if test='hotelName != null and hotelName != ""'>
+            AND h.name LIKE CONCAT('%', #{hotelName}, '%')
+        </if>
+        ORDER BY h.name, r.room_type, r.room_number
+    </select>
+
+    <select id="findRoomById" resultType="org.example.hotelmanagementsystem.entity.Room">
+        SELECT * FROM rooms WHERE id = #{id}
+    </select>
+
+    <select id="findCustomerByIdCard" resultType="org.example.hotelmanagementsystem.entity.Customer">
+        SELECT * FROM customers WHERE id_card = #{idCard}
+    </select>
+
+    <insert id="insertCustomer" parameterType="org.example.hotelmanagementsystem.entity.Customer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO customers(name, phone, email, id_card, created_at)
+        VALUES(#{name}, #{phone}, #{email}, #{idCard}, #{createdAt})
+    </insert>
+
+    <insert id="insertOrder" parameterType="org.example.hotelmanagementsystem.entity.Orders" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders(order_number, customer_id, room_id, check_in_date, check_out_date, total_amount, status, created_at)
+        VALUES(#{orderNumber}, #{customerId}, #{roomId}, #{checkInDate}, #{checkOutDate}, #{totalAmount}, #{status}, #{createdAt})
+    </insert>
+
+    <update id="updateRoomStatus">
+        UPDATE rooms SET status = #{status} WHERE id = #{roomId}
+    </update>
+
+    <insert id="insertUser" parameterType="org.example.hotelmanagementsystem.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users(username, password, role, created_at)
+        VALUES(#{username}, #{password}, #{role}, #{createdAt})
+    </insert>
+
+    <select id="findUserByUsername" resultType="org.example.hotelmanagementsystem.entity.User">
+        SELECT * FROM users WHERE username = #{username}
+    </select>
+
+</mapper>

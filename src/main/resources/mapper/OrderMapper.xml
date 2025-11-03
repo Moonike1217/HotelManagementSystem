@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.hotelmanagementsystem.mapper.OrderMapper">
+
+    <select id="findOrders" parameterType="org.example.hotelmanagementsystem.dto.OrderQueryDto" resultType="org.example.hotelmanagementsystem.dto.OrderDto">
+        SELECT o.*, c.name AS customerName, c.phone AS customerPhone, c.email AS customerEmail, c.id_card AS customerIdCard,
+        r.room_type, r.room_number, h.id AS hotelId, h.name AS hotelName, h.address AS hotelAddress
+        FROM orders o
+        LEFT JOIN customers c ON o.customer_id = c.id
+        LEFT JOIN rooms r ON o.room_id = r.id
+        LEFT JOIN hotels h ON r.hotel_id = h.id
+        WHERE 1=1
+        <if test='id != null'>
+            AND o.id = #{id}
+        </if>
+        <if test='orderNumber != null and orderNumber != ""'>
+            AND o.order_number = #{orderNumber}
+        </if>
+        <if test='customerId != null'>
+            AND o.customer_id = #{customerId}
+        </if>
+        <if test='customerName != null and customerName != ""'>
+            AND c.name LIKE CONCAT('%', #{customerName}, '%')
+        </if>
+        <if test='roomId != null'>
+            AND o.room_id = #{roomId}
+        </if>
+        <if test='hotelId != null'>
+            AND h.id = #{hotelId}
+        </if>
+        <if test='hotelName != null and hotelName != ""'>
+            AND h.name LIKE CONCAT('%', #{hotelName}, '%')
+        </if>
+        <if test='checkInDateStart != null and checkInDateStart != ""'>
+            AND o.check_in_date &gt;= #{checkInDateStart}
+        </if>
+        <if test='checkInDateEnd != null and checkInDateEnd != ""'>
+            AND o.check_in_date &lt;= #{checkInDateEnd}
+        </if>
+        <if test='status != null and status != ""'>
+            AND o.status = #{status}
+        </if>
+        ORDER BY o.created_at DESC
+    </select>
+
+    <select id="getOrderById" parameterType="java.lang.Integer" resultType="org.example.hotelmanagementsystem.dto.OrderDto">
+        SELECT o.*, c.name AS customerName, c.phone AS customerPhone, c.email AS customerEmail, c.id_card AS customerIdCard,
+        r.room_type, r.room_number, h.id AS hotelId, h.name AS hotelName, h.address AS hotelAddress
+        FROM orders o
+        LEFT JOIN customers c ON o.customer_id = c.id
+        LEFT JOIN rooms r ON o.room_id = r.id
+        LEFT JOIN hotels h ON r.hotel_id = h.id
+        WHERE o.id = #{id}
+    </select>
+
+    <select id="getOrderEntityById" parameterType="java.lang.Integer" resultType="org.example.hotelmanagementsystem.entity.Orders">
+        SELECT * FROM orders WHERE id = #{id}
+    </select>
+
+    <update id="updateOrder" parameterType="org.example.hotelmanagementsystem.entity.Orders">
+        UPDATE orders
+        <set>
+            <if test='checkInDate != null'>check_in_date = #{checkInDate},</if>
+            <if test='checkOutDate != null'>check_out_date = #{checkOutDate},</if>
+            <if test='status != null'>status = #{status},</if>
+            created_at = #{createdAt}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateRoomStatus">
+        UPDATE rooms SET status = #{status} WHERE id = #{roomId}
+    </update>
+
+</mapper>
