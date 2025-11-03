@@ -2,12 +2,15 @@ package org.example.hotelmanagementsystem.service.impl;
 
 import org.example.hotelmanagementsystem.entity.Hotel;
 import org.example.hotelmanagementsystem.dto.HotelDto;
+import org.example.hotelmanagementsystem.entity.Room;
 import org.example.hotelmanagementsystem.mapper.HotelMapper;
+import org.example.hotelmanagementsystem.mapper.RoomMapper;
 import org.example.hotelmanagementsystem.service.HotelService;
 import org.example.hotelmanagementsystem.util.TimestampUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,8 +19,11 @@ public class HotelServiceImpl implements HotelService {
     
     @Autowired
     private HotelMapper hotelMapper;
+    @Autowired
+    private RoomMapper roomMapper;
     
     @Override
+    @Transactional
     public boolean addHotel(HotelDto hotelDto) {
         Hotel hotel = new Hotel();
         BeanUtils.copyProperties(hotelDto, hotel);
@@ -25,7 +31,21 @@ public class HotelServiceImpl implements HotelService {
         if (hotel.getCreatedAt() == null) {
             hotel.setCreatedAt(TimestampUtil.getCurrentTimestamp());
         }
+        // 插入酒店信息
         int result = hotelMapper.insert(hotel);
+        // 取出酒店的房型信息
+        List<HotelDto.RoomTypeDto> roomTypes = hotelDto.getRoomTypes();
+        for (HotelDto.RoomTypeDto roomType : roomTypes) {
+            // 创建房间对象
+            Room room = new Room();
+            BeanUtils.copyProperties(roomType, room);
+            room.setHotelId(hotel.getId());
+            room.setStatus("available");
+            room.setCreatedAt(TimestampUtil.getCurrentTimestamp());
+            // 插入房间信息
+            result += roomMapper.insert(room);
+        }
+
         return result > 0;
     }
     
