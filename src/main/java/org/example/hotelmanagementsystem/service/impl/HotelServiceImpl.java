@@ -50,12 +50,27 @@ public class HotelServiceImpl implements HotelService {
     }
     
     @Override
+    @Transactional
     public boolean updateHotel(HotelDto hotelDto) {
         Hotel hotel = new Hotel();
         BeanUtils.copyProperties(hotelDto, hotel);
         // 设置更新时间
         hotel.setCreatedAt(TimestampUtil.getCurrentTimestamp());
         int result = hotelMapper.updateById(hotel);
+        // 更新酒店房型信息
+        if (hotelDto.getRoomTypes() != null) {
+            List<HotelDto.RoomTypeDto> roomTypes = hotelDto.getRoomTypes();
+            for (HotelDto.RoomTypeDto roomType : roomTypes) {
+                // 创建房间对象
+                Room room = new Room();
+                BeanUtils.copyProperties(roomType, room);
+                room.setHotelId(hotel.getId());
+                room.setStatus("available");
+                room.setCreatedAt(TimestampUtil.getCurrentTimestamp());
+                // 更新房间信息
+                result += roomMapper.updateById(room);
+            }
+        }
         return result > 0;
     }
     

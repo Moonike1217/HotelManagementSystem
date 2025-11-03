@@ -22,9 +22,6 @@ public interface RoomMapper {
      * @param room 房间实体
      * @return 影响行数
      */
-    @Update("UPDATE rooms SET hotel_id=#{hotelId}, room_type=#{roomType}, room_number=#{roomNumber}, " +
-            "price=#{price}, status=#{status}, created_at=#{createdAt} " +
-            "WHERE id=#{id}")
     int updateById(Room room);
     
     /**

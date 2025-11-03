@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.hotelmanagementsystem.mapper.RoomMapper">
+
+    <update id="updateById" parameterType="org.example.hotelmanagementsystem.entity.Room">
+        UPDATE rooms
+        <set>
+            <if test="hotelId != null">
+                hotel_id = #{hotelId},
+            </if>
+            <if test="roomType != null and roomType != ''">
+                room_type = #{roomType},
+            </if>
+            <if test="roomNumber != null and roomNumber != ''">
+                room_number = #{roomNumber},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="createdAt != null">
+                created_at = #{createdAt},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>
