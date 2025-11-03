@@ -145,6 +145,7 @@ public interface OrderMapper {
         "<if test='checkInDate != null'>check_in_date = #{checkInDate},</if>",
         "<if test='checkOutDate != null'>check_out_date = #{checkOutDate},</if>",
         "<if test='status != null'>status = #{status},</if>",
+        "created_at = #{createdAt}",
         "</set>",
         "WHERE id = #{id}",
         "</script>"

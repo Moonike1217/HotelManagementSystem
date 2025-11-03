@@ -12,6 +12,6 @@ public class User {
     private String password;
     // 角色（admin:管理员, staff:员工）
     private String role = "staff";
-    // 创建时间
-    private String createdAt;
+    // 创建时间 (秒级时间戳)
+    private Long createdAt;
 }

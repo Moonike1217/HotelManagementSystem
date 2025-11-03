@@ -16,6 +16,6 @@ public class Room {
     private java.math.BigDecimal price;
     // 状态（available:空闲, occupied:已入住, maintenance:维修中）
     private String status = "available";
-    // 创建时间
-    private String createdAt;
+    // 创建时间 (秒级时间戳)
+    private Long createdAt;
 }

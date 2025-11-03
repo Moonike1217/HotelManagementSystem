@@ -4,6 +4,7 @@ import org.example.hotelmanagementsystem.entity.Hotel;
 import org.example.hotelmanagementsystem.dto.HotelDto;
 import org.example.hotelmanagementsystem.mapper.HotelMapper;
 import org.example.hotelmanagementsystem.service.HotelService;
+import org.example.hotelmanagementsystem.util.TimestampUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class HotelServiceImpl implements HotelService {
     public boolean addHotel(HotelDto hotelDto) {
         Hotel hotel = new Hotel();
         BeanUtils.copyProperties(hotelDto, hotel);
+        // 设置创建时间
+        if (hotel.getCreatedAt() == null) {
+            hotel.setCreatedAt(TimestampUtil.getCurrentTimestamp());
+        }
         int result = hotelMapper.insert(hotel);
         return result > 0;
     }
@@ -28,6 +33,8 @@ public class HotelServiceImpl implements HotelService {
     public boolean updateHotel(HotelDto hotelDto) {
         Hotel hotel = new Hotel();
         BeanUtils.copyProperties(hotelDto, hotel);
+        // 设置更新时间
+        hotel.setCreatedAt(TimestampUtil.getCurrentTimestamp());
         int result = hotelMapper.updateById(hotel);
         return result > 0;
     }

@@ -117,8 +117,8 @@ public interface ReviewMapper {
      * @param review 评价信息
      * @return 影响行数
      */
-    @Insert("INSERT INTO reviews(order_id, customer_id, hotel_id, rating, comment) " +
-            "VALUES(#{orderId}, #{customerId}, #{hotelId}, #{rating}, #{comment})")
+    @Insert("INSERT INTO reviews(order_id, customer_id, hotel_id, rating, comment, created_at) " +
+            "VALUES(#{orderId}, #{customerId}, #{hotelId}, #{rating}, #{comment}, #{createdAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insertReview(Review review);
     
@@ -133,6 +133,7 @@ public interface ReviewMapper {
         "<set>",
         "<if test='rating != null'>rating = #{rating},</if>",
         "<if test='comment != null'>comment = #{comment},</if>",
+        "created_at = #{createdAt}",
         "</set>",
         "WHERE id = #{id}",
         "</script>"

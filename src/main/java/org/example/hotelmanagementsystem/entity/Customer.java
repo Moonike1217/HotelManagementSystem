@@ -14,6 +14,6 @@ public class Customer {
     private String email;
     // 身份证号
     private String idCard;
-    // 创建时间
-    private String createdAt;
+    // 创建时间 (秒级时间戳)
+    private Long createdAt;
 }

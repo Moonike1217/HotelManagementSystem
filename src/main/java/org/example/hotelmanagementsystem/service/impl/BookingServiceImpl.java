@@ -9,6 +9,7 @@ import org.example.hotelmanagementsystem.entity.Orders;
 import org.example.hotelmanagementsystem.entity.Room;
 import org.example.hotelmanagementsystem.mapper.BookingMapper;
 import org.example.hotelmanagementsystem.service.BookingService;
+import org.example.hotelmanagementsystem.util.TimestampUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +63,7 @@ public class BookingServiceImpl implements BookingService {
             customer.setPhone(bookingRequest.getCustomerPhone());
             customer.setEmail(bookingRequest.getCustomerEmail());
             customer.setIdCard(bookingRequest.getCustomerIdCard());
+            customer.setCreatedAt(TimestampUtil.getCurrentTimestamp());
             bookingMapper.insertCustomer(customer);
         }
         
@@ -84,6 +86,7 @@ public class BookingServiceImpl implements BookingService {
         order.setCheckOutDate(bookingRequest.getCheckOutDate());
         order.setTotalAmount(totalAmount);
         order.setStatus("pending");
+        order.setCreatedAt(TimestampUtil.getCurrentTimestamp());
         bookingMapper.insertOrder(order);
         
         // 更新房间状态为已预订

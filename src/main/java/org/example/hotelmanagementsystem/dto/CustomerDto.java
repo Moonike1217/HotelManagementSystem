@@ -15,8 +15,8 @@ public class CustomerDto {
     private String email;
     // 身份证号
     private String idCard;
-    // 创建时间
-    private String createdAt;
+    // 创建时间 (秒级时间戳)
+    private Long createdAt;
     // 历史订单列表
     private List<OrderDto> orderHistory;
 }

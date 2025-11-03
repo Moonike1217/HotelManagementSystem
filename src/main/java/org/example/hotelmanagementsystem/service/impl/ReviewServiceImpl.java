@@ -7,6 +7,7 @@ import org.example.hotelmanagementsystem.dto.ReviewCreateDto;
 import org.example.hotelmanagementsystem.dto.ReviewReplyDto;
 import org.example.hotelmanagementsystem.mapper.ReviewMapper;
 import org.example.hotelmanagementsystem.service.ReviewService;
+import org.example.hotelmanagementsystem.util.TimestampUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,10 @@ public class ReviewServiceImpl implements ReviewService {
         // 创建评价对象
         Review review = new Review();
         BeanUtils.copyProperties(reviewCreateDto, review);
+        // 设置创建时间
+        if (review.getCreatedAt() == null) {
+            review.setCreatedAt(TimestampUtil.getCurrentTimestamp());
+        }
         
         // 插入评价
         int result = reviewMapper.insertReview(review);
@@ -52,6 +57,8 @@ public class ReviewServiceImpl implements ReviewService {
     
     @Override
     public boolean updateReview(Review review) {
+        // 设置更新时间
+        review.setCreatedAt(TimestampUtil.getCurrentTimestamp());
         int result = reviewMapper.updateReview(review);
         return result > 0;
     }

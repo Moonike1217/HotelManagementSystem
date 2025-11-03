@@ -6,6 +6,7 @@ import org.example.hotelmanagementsystem.dto.CustomerQueryDto;
 import org.example.hotelmanagementsystem.dto.OrderDto;
 import org.example.hotelmanagementsystem.mapper.CustomerMapper;
 import org.example.hotelmanagementsystem.service.CustomerService;
+import org.example.hotelmanagementsystem.util.TimestampUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,12 +69,19 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
         
+        // 设置创建时间
+        if (customer.getCreatedAt() == null) {
+            customer.setCreatedAt(TimestampUtil.getCurrentTimestamp());
+        }
+        
         int result = customerMapper.insertCustomer(customer);
         return result > 0;
     }
     
     @Override
     public boolean updateCustomer(Customer customer) {
+        // 设置更新时间
+        customer.setCreatedAt(TimestampUtil.getCurrentTimestamp());
         int result = customerMapper.updateCustomer(customer);
         return result > 0;
     }

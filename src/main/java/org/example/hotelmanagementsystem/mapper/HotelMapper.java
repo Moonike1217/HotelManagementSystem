@@ -12,8 +12,8 @@ public interface HotelMapper {
      * @param hotel 酒店实体
      * @return 影响行数
      */
-    @Insert("INSERT INTO hotels(name, address, phone, star_level, description, status) " +
-            "VALUES(#{name}, #{address}, #{phone}, #{starLevel}, #{description}, #{status})")
+    @Insert("INSERT INTO hotels(name, address, phone, star_level, description, status, created_at) " +
+            "VALUES(#{name}, #{address}, #{phone}, #{starLevel}, #{description}, #{status}, #{createdAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Hotel hotel);
     
@@ -23,7 +23,7 @@ public interface HotelMapper {
      * @return 影响行数
      */
     @Update("UPDATE hotels SET name=#{name}, address=#{address}, phone=#{phone}, " +
-            "star_level=#{starLevel}, description=#{description}, status=#{status} " +
+            "star_level=#{starLevel}, description=#{description}, status=#{status}, created_at=#{createdAt} " +
             "WHERE id=#{id}")
     int updateById(Hotel hotel);
     

@@ -16,6 +16,6 @@ public class Review {
     private Integer rating;
     // 评价内容
     private String comment;
-    // 创建时间
-    private String createdAt;
+    // 创建时间 (秒级时间戳)
+    private Long createdAt;
 }

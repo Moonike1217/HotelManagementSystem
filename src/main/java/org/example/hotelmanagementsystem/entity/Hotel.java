@@ -18,6 +18,6 @@ public class Hotel {
     private String description;
     // 状态（active:启用, inactive:禁用）
     private String status = "active";
-    // 创建时间
-    private String createdAt;
+    // 创建时间 (秒级时间戳)
+    private Long createdAt;
 }

@@ -114,8 +114,8 @@ public interface CustomerMapper {
      * @param customer 客户信息
      * @return 影响行数
      */
-    @Insert("INSERT INTO customers(name, phone, email, id_card) " +
-            "VALUES(#{name}, #{phone}, #{email}, #{idCard})")
+    @Insert("INSERT INTO customers(name, phone, email, id_card, created_at) " +
+            "VALUES(#{name}, #{phone}, #{email}, #{idCard}, #{createdAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insertCustomer(Customer customer);
     
@@ -132,6 +132,7 @@ public interface CustomerMapper {
         "<if test='phone != null'>phone = #{phone},</if>",
         "<if test='email != null'>email = #{email},</if>",
         "<if test='idCard != null'>id_card = #{idCard},</if>",
+        "created_at = #{createdAt}",
         "</set>",
         "WHERE id = #{id}",
         "</script>"

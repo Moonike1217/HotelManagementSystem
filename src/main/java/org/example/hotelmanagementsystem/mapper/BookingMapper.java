@@ -5,6 +5,7 @@ import org.example.hotelmanagementsystem.dto.AvailableRoomDto;
 import org.example.hotelmanagementsystem.entity.Orders;
 import org.example.hotelmanagementsystem.entity.Customer;
 import org.example.hotelmanagementsystem.entity.Room;
+import org.example.hotelmanagementsystem.entity.User;
 import java.util.List;
 
 @Mapper
@@ -98,8 +99,8 @@ public interface BookingMapper {
      * @param customer 客户信息
      * @return 影响行数
      */
-    @Insert("INSERT INTO customers(name, phone, email, id_card) " +
-            "VALUES(#{name}, #{phone}, #{email}, #{idCard})")
+    @Insert("INSERT INTO customers(name, phone, email, id_card, created_at) " +
+            "VALUES(#{name}, #{phone}, #{email}, #{idCard}, #{createdAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insertCustomer(Customer customer);
     
@@ -108,8 +109,8 @@ public interface BookingMapper {
      * @param order 订单信息
      * @return 影响行数
      */
-    @Insert("INSERT INTO orders(order_number, customer_id, room_id, check_in_date, check_out_date, total_amount, status) " +
-            "VALUES(#{orderNumber}, #{customerId}, #{roomId}, #{checkInDate}, #{checkOutDate}, #{totalAmount}, #{status})")
+    @Insert("INSERT INTO orders(order_number, customer_id, room_id, check_in_date, check_out_date, total_amount, status, created_at) " +
+            "VALUES(#{orderNumber}, #{customerId}, #{roomId}, #{checkInDate}, #{checkOutDate}, #{totalAmount}, #{status}, #{createdAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insertOrder(Orders order);
     
@@ -121,4 +122,29 @@ public interface BookingMapper {
      */
     @Update("UPDATE rooms SET status = #{status} WHERE id = #{roomId}")
     int updateRoomStatus(@Param("roomId") Integer roomId, @Param("status") String status);
+    
+    /**
+     * 插入新用户
+     * @param user 用户信息
+     * @return 影响行数
+     */
+    @Insert("INSERT INTO users(username, password, role, created_at) " +
+            "VALUES(#{username}, #{password}, #{role}, #{createdAt})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int insertUser(User user);
+    
+    /**
+     * 根据用户名查询用户
+     * @param username 用户名
+     * @return 用户信息
+     */
+    @Select("SELECT * FROM users WHERE username = #{username}")
+    @Results({
+        @Result(property = "id", column = "id"),
+        @Result(property = "username", column = "username"),
+        @Result(property = "password", column = "password"),
+        @Result(property = "role", column = "role"),
+        @Result(property = "createdAt", column = "created_at")
+    })
+    User findUserByUsername(String username);
 }

@@ -39,6 +39,6 @@ public class OrderDto {
     private BigDecimal totalAmount;
     // 订单状态
     private String status;
-    // 创建时间
-    private String createdAt;
+    // 创建时间 (秒级时间戳)
+    private Long createdAt;
 }
