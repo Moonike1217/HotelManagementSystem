@@ -28,8 +28,8 @@ public class HotelDto {
     public static class RoomTypeDto {
         // 房型名称
         private String roomType;
-        // 房间数量
-        private Integer roomCount;
+        // 房间号
+        private Integer roomNumber;
         // 价格
         private java.math.BigDecimal price;
     }
