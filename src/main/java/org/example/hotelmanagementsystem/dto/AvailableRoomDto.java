@@ -19,8 +19,4 @@ public class AvailableRoomDto {
     private String roomNumber;
     // 价格
     private BigDecimal price;
-    // 入住日期
-    private String checkInDate;
-    // 退房日期
-    private String checkOutDate;
 }
