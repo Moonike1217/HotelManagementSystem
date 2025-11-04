@@ -46,26 +46,15 @@ public class BookingServiceImpl implements BookingService {
             throw new RuntimeException("房间不存在或不可用");
         }
         
-        // 查找或创建客户
-        Customer customer = null;
-        if (bookingRequest.getCustomerId() != null) {
-            // 如果提供了客户ID，则使用该客户
-            // 这里简化处理，实际应该通过ID查找客户
-        } else if (bookingRequest.getCustomerIdCard() != null && !bookingRequest.getCustomerIdCard().isEmpty()) {
-            // 通过身份证号查找客户
-            customer = bookingMapper.findCustomerByIdCard(bookingRequest.getCustomerIdCard());
-        }
-        
-        // 如果客户不存在，则创建新客户
-        if (customer == null) {
-            customer = new Customer();
-            customer.setName(bookingRequest.getCustomerName());
-            customer.setPhone(bookingRequest.getCustomerPhone());
-            customer.setEmail(bookingRequest.getCustomerEmail());
-            customer.setIdCard(bookingRequest.getCustomerIdCard());
-            customer.setCreatedAt(TimestampUtil.getCurrentTimestamp());
-            bookingMapper.insertCustomer(customer);
-        }
+        // 创建客户
+        Customer customer = new Customer();
+        customer.setName(bookingRequest.getCustomerName());
+        customer.setPhone(bookingRequest.getCustomerPhone());
+        customer.setEmail(bookingRequest.getCustomerEmail());
+        customer.setIdCard(bookingRequest.getCustomerIdCard());
+        customer.setCreatedAt(TimestampUtil.getCurrentTimestamp());
+        bookingMapper.insertCustomer(customer);
+
         
         // 计算天数
         int days = calculateDays(bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate());
@@ -88,9 +77,6 @@ public class BookingServiceImpl implements BookingService {
         order.setStatus("pending");
         order.setCreatedAt(TimestampUtil.getCurrentTimestamp());
         bookingMapper.insertOrder(order);
-        
-        // 更新房间状态为已预订
-        bookingMapper.updateRoomStatus(bookingRequest.getRoomId(), "occupied");
         
         // 返回预订结果
         BookingResultDto result = new BookingResultDto();
