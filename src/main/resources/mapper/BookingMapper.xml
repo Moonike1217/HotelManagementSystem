@@ -17,7 +17,7 @@
             AND h.address LIKE CONCAT('%', #{location}, '%')
         </if>
         <if test='roomType != null and roomType != ""'>
-            AND r.room_type = #{roomType}
+            AND r.room_type LIKE CONCAT('%', #{roomType}, '%')
         </if>
         <if test='hotelName != null and hotelName != ""'>
             AND h.name LIKE CONCAT('%', #{hotelName}, '%')
