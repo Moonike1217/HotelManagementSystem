@@ -35,15 +35,17 @@ public class HotelServiceImpl implements HotelService {
         int result = hotelMapper.insert(hotel);
         // 取出酒店的房型信息
         List<HotelDto.RoomTypeDto> roomTypes = hotelDto.getRoomTypes();
-        for (HotelDto.RoomTypeDto roomType : roomTypes) {
-            // 创建房间对象
-            Room room = new Room();
-            BeanUtils.copyProperties(roomType, room);
-            room.setHotelId(hotel.getId());
-            room.setStatus("available");
-            room.setCreatedAt(TimestampUtil.getCurrentTimestamp());
-            // 插入房间信息
-            result += roomMapper.insert(room);
+        if (roomTypes != null && !roomTypes.isEmpty()) {
+            for (HotelDto.RoomTypeDto roomType : roomTypes) {
+                // 创建房间对象
+                Room room = new Room();
+                BeanUtils.copyProperties(roomType, room);
+                room.setHotelId(hotel.getId());
+                room.setStatus("available");
+                room.setCreatedAt(TimestampUtil.getCurrentTimestamp());
+                // 插入房间信息
+                result += roomMapper.insert(room);
+            }
         }
 
         return result > 0;
@@ -82,6 +84,19 @@ public class HotelServiceImpl implements HotelService {
         }
         HotelDto hotelDto = new HotelDto();
         BeanUtils.copyProperties(hotel, hotelDto);
+        
+        // 查询该酒店的所有房间信息
+        List<Room> rooms = roomMapper.selectByHotelId(id);
+        if (rooms != null && !rooms.isEmpty()) {
+            List<HotelDto.RoomTypeDto> roomTypeDtos = new java.util.ArrayList<>();
+            for (Room room : rooms) {
+                HotelDto.RoomTypeDto roomTypeDto = new HotelDto.RoomTypeDto();
+                BeanUtils.copyProperties(room, roomTypeDto);
+                roomTypeDtos.add(roomTypeDto);
+            }
+            hotelDto.setRoomTypes(roomTypeDtos);
+        }
+        
         return hotelDto;
     }
     
