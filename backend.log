@@ -1,0 +1,49 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< org.example:HotelManagementSystem >------------------
+[INFO] Building HotelManagementSystem 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:2.6.13:run (default-cli) > test-compile @ HotelManagementSystem >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ HotelManagementSystem ---
+[INFO] Copying 8 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ HotelManagementSystem ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ HotelManagementSystem ---
+[INFO] skip non existing resourceDirectory /Users/Shabix/Personal/NJUPTHotel/HotelManagementSystem/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ HotelManagementSystem ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] <<< spring-boot:2.6.13:run (default-cli) < test-compile @ HotelManagementSystem <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:2.6.13:run (default-cli) @ HotelManagementSystem ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.6.13)
+
+2025-11-04 15:10:54.993  INFO 39777 --- [           main] o.e.h.HotelManagementSystemApplication   : Starting HotelManagementSystemApplication using Java 17.0.16 on MacBook-Air.local with PID 39777 (/Users/Shabix/Personal/NJUPTHotel/HotelManagementSystem/target/classes started by Zhuanz in /Users/Shabix/Personal/NJUPTHotel/HotelManagementSystem)
+2025-11-04 15:10:54.994  INFO 39777 --- [           main] o.e.h.HotelManagementSystemApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-11-04 15:10:55.382  INFO 39777 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2025-11-04 15:10:55.386  INFO 39777 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-04 15:10:55.386  INFO 39777 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.68]
+2025-11-04 15:10:55.417  INFO 39777 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-11-04 15:10:55.417  INFO 39777 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 410 ms
+2025-11-04 15:10:55.647  INFO 39777 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2025-11-04 15:10:55.651  INFO 39777 --- [           main] o.e.h.HotelManagementSystemApplication   : Started HotelManagementSystemApplication in 0.773 seconds (JVM running for 0.874)
+2025-11-04 15:11:25.696  INFO 39777 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-04 15:11:25.696  INFO 39777 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-11-04 15:11:25.697  INFO 39777 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-11-04 15:11:25.717  INFO 39777 --- [nio-8080-exec-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-11-04 15:11:25.771  INFO 39777 --- [nio-8080-exec-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.

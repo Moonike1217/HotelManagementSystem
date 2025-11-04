@@ -97,7 +97,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>org.example.hotelmanagementsystem.HotelManagementSystemApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
