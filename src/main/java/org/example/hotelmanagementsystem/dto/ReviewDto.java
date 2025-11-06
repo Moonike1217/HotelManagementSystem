@@ -21,7 +21,7 @@ public class ReviewDto {
     // 评价内容
     private String comment;
     // 管理员回复
-    private String adminReply;
+    private String reply;
     // 创建时间
     private String createdAt;
 }

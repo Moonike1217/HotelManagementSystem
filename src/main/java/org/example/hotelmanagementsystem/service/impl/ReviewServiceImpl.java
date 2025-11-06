@@ -65,7 +65,7 @@ public class ReviewServiceImpl implements ReviewService {
     
     @Override
     public boolean replyToReview(ReviewReplyDto reviewReplyDto) {
-        int result = reviewMapper.replyToReview(reviewReplyDto.getId(), reviewReplyDto.getAdminReply());
+        int result = reviewMapper.replyToReview(reviewReplyDto.getId(), reviewReplyDto.getReply());
         return result > 0;
     }
     

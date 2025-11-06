@@ -7,5 +7,5 @@ public class ReviewReplyDto {
     // 评价ID
     private Integer id;
     // 管理员回复
-    private String adminReply;
+    private String reply;
 }
