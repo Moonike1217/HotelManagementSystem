@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogBody, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Badge } from '../components/ui/badge';
 import { Textarea } from '../components/ui/textarea';
 import { Select } from '../components/ui/select';
@@ -195,7 +195,6 @@ export function Reviews() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>订单号</TableHead>
                   <TableHead>客户</TableHead>
                   <TableHead>酒店</TableHead>
                   <TableHead>评分</TableHead>
@@ -208,8 +207,7 @@ export function Reviews() {
               <TableBody>
                 {reviews.map((review) => (
                   <TableRow key={review.id}>
-                    <TableCell className="font-medium">{review.orderNumber}</TableCell>
-                    <TableCell>{review.customerName}</TableCell>
+                    <TableCell className="font-medium">{review.customerName}</TableCell>
                     <TableCell>{review.hotelName}</TableCell>
                     <TableCell>{renderStars(review.rating)}</TableCell>
                     <TableCell>
@@ -249,15 +247,16 @@ export function Reviews() {
 
       <Dialog open={isReplyDialogOpen} onOpenChange={setIsReplyDialogOpen}>
         <DialogContent className="max-w-2xl">
-          <form onSubmit={handleSubmitReply}>
-            <DialogHeader>
-              <DialogTitle>回复评价</DialogTitle>
-              <DialogDescription>
-                {selectedReview && `${selectedReview.customerName} 的评价`}
-              </DialogDescription>
-            </DialogHeader>
-            {selectedReview && (
-              <div className="space-y-4 py-4">
+          <DialogHeader>
+            <DialogTitle>回复评价</DialogTitle>
+            <DialogDescription>
+              {selectedReview && `${selectedReview.customerName} 的评价`}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmitReply} className="flex flex-col flex-1 min-h-0">
+            <DialogBody>
+              {selectedReview && (
+              <div className="space-y-4">
                 <div className="rounded-lg bg-muted p-4">
                   <div className="mb-2">{renderStars(selectedReview.rating)}</div>
                   <p className="text-sm">{selectedReview.comment}</p>
@@ -277,7 +276,8 @@ export function Reviews() {
                   />
                 </div>
               </div>
-            )}
+              )}
+            </DialogBody>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setIsReplyDialogOpen(false)}>
                 取消

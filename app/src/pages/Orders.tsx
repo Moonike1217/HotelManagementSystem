@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Badge } from '../components/ui/badge';
 import { Select } from '../components/ui/select';
 import { Toast } from '../components/ui/toast';
+import { Tooltip } from '../components/ui/tooltip';
 import { useToast } from '../hooks/useToast';
 import { orderApi } from '../api';
 import type { OrderDto, OrderQueryDto } from '../types';
@@ -26,9 +27,11 @@ export function Orders() {
   const [loading, setLoading] = useState(false);
   const { toast, showToast, hideToast } = useToast();
   const [searchQuery, setSearchQuery] = useState<OrderQueryDto>({
+    orderNumber: '',
     customerName: '',
-    customerPhone: '',
     hotelName: '',
+    checkInDateStart: '',
+    checkInDateEnd: '',
     status: '',
   });
 
@@ -127,10 +130,19 @@ export function Orders() {
       <Card>
         <CardHeader>
           <CardTitle>搜索订单</CardTitle>
-          <CardDescription>根据客户信息、酒店名称或状态搜索</CardDescription>
+          <CardDescription>根据订单编号、客户姓名、酒店名称、入住日期或状态搜索</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-2">
+              <Label htmlFor="orderNumber">订单编号</Label>
+              <Input
+                id="orderNumber"
+                placeholder="输入订单编号"
+                value={searchQuery.orderNumber}
+                onChange={(e) => setSearchQuery({ ...searchQuery, orderNumber: e.target.value })}
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="customerName">客户姓名</Label>
               <Input
@@ -141,21 +153,30 @@ export function Orders() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="customerPhone">客户电话</Label>
-              <Input
-                id="customerPhone"
-                placeholder="输入客户电话"
-                value={searchQuery.customerPhone}
-                onChange={(e) => setSearchQuery({ ...searchQuery, customerPhone: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="hotelName">酒店名称</Label>
               <Input
                 id="hotelName"
                 placeholder="输入酒店名称"
                 value={searchQuery.hotelName}
                 onChange={(e) => setSearchQuery({ ...searchQuery, hotelName: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="checkInDateStart">入住日期（起始）</Label>
+              <Input
+                id="checkInDateStart"
+                type="date"
+                value={searchQuery.checkInDateStart}
+                onChange={(e) => setSearchQuery({ ...searchQuery, checkInDateStart: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="checkInDateEnd">入住日期（结束）</Label>
+              <Input
+                id="checkInDateEnd"
+                type="date"
+                value={searchQuery.checkInDateEnd}
+                onChange={(e) => setSearchQuery({ ...searchQuery, checkInDateEnd: e.target.value })}
               />
             </div>
             <div className="space-y-2">
@@ -250,28 +271,38 @@ export function Orders() {
                         <div className="flex flex-wrap gap-1">
                           {order.status === 'pending' && (
                             <>
-                              <Button size="sm" variant="outline" onClick={() => handleConfirm(order.id!)}>
-                                <CheckCircle className="h-3 w-3" />
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => handleCancel(order.id!)}>
-                                <XCircle className="h-3 w-3" />
-                              </Button>
+                              <Tooltip content="确认订单">
+                                <Button size="sm" variant="outline" onClick={() => handleConfirm(order.id!)}>
+                                  <CheckCircle className="h-3 w-3" />
+                                </Button>
+                              </Tooltip>
+                              <Tooltip content="取消订单">
+                                <Button size="sm" variant="outline" onClick={() => handleCancel(order.id!)}>
+                                  <XCircle className="h-3 w-3" />
+                                </Button>
+                              </Tooltip>
                             </>
                           )}
                           {order.status === 'confirmed' && (
                             <>
-                              <Button size="sm" variant="outline" onClick={() => handleCheckIn(order.id!)}>
-                                <LogIn className="h-3 w-3" />
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => handleNotify(order)}>
-                                <Bell className="h-3 w-3" />
-                              </Button>
+                              <Tooltip content="入住">
+                                <Button size="sm" variant="outline" onClick={() => handleCheckIn(order.id!)}>
+                                  <LogIn className="h-3 w-3" />
+                                </Button>
+                              </Tooltip>
+                              <Tooltip content="发送提醒">
+                                <Button size="sm" variant="outline" onClick={() => handleNotify(order)}>
+                                  <Bell className="h-3 w-3" />
+                                </Button>
+                              </Tooltip>
                             </>
                           )}
                           {order.status === 'checked_in' && (
-                            <Button size="sm" variant="outline" onClick={() => handleCheckOut(order.id!)}>
-                              <LogOut className="h-3 w-3" />
-                            </Button>
+                            <Tooltip content="退房">
+                              <Button size="sm" variant="outline" onClick={() => handleCheckOut(order.id!)}>
+                                <LogOut className="h-3 w-3" />
+                              </Button>
+                            </Tooltip>
                           )}
                         </div>
                       </TableCell>

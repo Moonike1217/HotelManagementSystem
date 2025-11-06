@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogBody, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Badge } from '../components/ui/badge';
 import { Textarea } from '../components/ui/textarea';
 import { Select } from '../components/ui/select';
@@ -232,14 +232,15 @@ export function Hotels() {
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <DialogHeader>
-              <DialogTitle>{editingHotel ? '编辑酒店' : '添加酒店'}</DialogTitle>
-              <DialogDescription>
-                请填写酒店的基本信息
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
+          <DialogHeader>
+            <DialogTitle>{editingHotel ? '编辑酒店' : '添加酒店'}</DialogTitle>
+            <DialogDescription>
+              请填写酒店的基本信息
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+            <DialogBody>
+              <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">酒店名称 *</Label>
                 <Input
@@ -372,7 +373,8 @@ export function Hotels() {
                   </div>
                 )}
               </div>
-            </div>
+              </div>
+            </DialogBody>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                 取消

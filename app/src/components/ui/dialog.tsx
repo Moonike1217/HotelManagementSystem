@@ -39,7 +39,8 @@ const DialogContent = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "relative z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg sm:rounded-lg",
+      "relative z-50 flex flex-col w-full max-w-2xl border bg-background shadow-lg sm:rounded-lg",
+      "max-h-[90vh] h-auto",
       className
     )}
     {...props}
@@ -55,7 +56,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
+      "flex flex-col space-y-1.5 text-center sm:text-left px-6 pt-6 pb-4 border-b flex-shrink-0",
       className
     )}
     {...props}
@@ -63,13 +64,27 @@ const DialogHeader = ({
 )
 DialogHeader.displayName = "DialogHeader"
 
+const DialogBody = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex-1 overflow-y-auto px-6 py-4 min-h-0",
+      className
+    )}
+    {...props}
+  />
+)
+DialogBody.displayName = "DialogBody"
+
 const DialogFooter = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 px-6 pb-6 pt-4 border-t flex-shrink-0",
       className
     )}
     {...props}
@@ -108,6 +123,7 @@ export {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogBody,
   DialogFooter,
   DialogTitle,
   DialogDescription,
