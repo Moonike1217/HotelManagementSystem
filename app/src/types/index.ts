@@ -69,12 +69,12 @@ export interface OrderDto {
 
 // 订单查询条件
 export interface OrderQueryDto {
+  orderNumber?: string;
   customerName?: string;
-  customerPhone?: string;
   hotelName?: string;
+  checkInDateStart?: string;
+  checkInDateEnd?: string;
   status?: string;
-  checkInDateFrom?: string;
-  checkInDateTo?: string;
 }
 
 // 订单更新信息
