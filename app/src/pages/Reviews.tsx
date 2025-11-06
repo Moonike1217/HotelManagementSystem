@@ -195,7 +195,6 @@ export function Reviews() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>订单号</TableHead>
                   <TableHead>客户</TableHead>
                   <TableHead>酒店</TableHead>
                   <TableHead>评分</TableHead>
@@ -208,8 +207,7 @@ export function Reviews() {
               <TableBody>
                 {reviews.map((review) => (
                   <TableRow key={review.id}>
-                    <TableCell className="font-medium">{review.orderNumber}</TableCell>
-                    <TableCell>{review.customerName}</TableCell>
+                    <TableCell className="font-medium">{review.customerName}</TableCell>
                     <TableCell>{review.hotelName}</TableCell>
                     <TableCell>{renderStars(review.rating)}</TableCell>
                     <TableCell>
