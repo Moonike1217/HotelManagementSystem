@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Badge } from '../components/ui/badge';
 import { Select } from '../components/ui/select';
 import { Toast } from '../components/ui/toast';
+import { Tooltip } from '../components/ui/tooltip';
 import { useToast } from '../hooks/useToast';
 import { orderApi } from '../api';
 import type { OrderDto, OrderQueryDto } from '../types';
@@ -250,28 +251,38 @@ export function Orders() {
                         <div className="flex flex-wrap gap-1">
                           {order.status === 'pending' && (
                             <>
-                              <Button size="sm" variant="outline" onClick={() => handleConfirm(order.id!)}>
-                                <CheckCircle className="h-3 w-3" />
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => handleCancel(order.id!)}>
-                                <XCircle className="h-3 w-3" />
-                              </Button>
+                              <Tooltip content="确认订单">
+                                <Button size="sm" variant="outline" onClick={() => handleConfirm(order.id!)}>
+                                  <CheckCircle className="h-3 w-3" />
+                                </Button>
+                              </Tooltip>
+                              <Tooltip content="取消订单">
+                                <Button size="sm" variant="outline" onClick={() => handleCancel(order.id!)}>
+                                  <XCircle className="h-3 w-3" />
+                                </Button>
+                              </Tooltip>
                             </>
                           )}
                           {order.status === 'confirmed' && (
                             <>
-                              <Button size="sm" variant="outline" onClick={() => handleCheckIn(order.id!)}>
-                                <LogIn className="h-3 w-3" />
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={() => handleNotify(order)}>
-                                <Bell className="h-3 w-3" />
-                              </Button>
+                              <Tooltip content="入住">
+                                <Button size="sm" variant="outline" onClick={() => handleCheckIn(order.id!)}>
+                                  <LogIn className="h-3 w-3" />
+                                </Button>
+                              </Tooltip>
+                              <Tooltip content="发送提醒">
+                                <Button size="sm" variant="outline" onClick={() => handleNotify(order)}>
+                                  <Bell className="h-3 w-3" />
+                                </Button>
+                              </Tooltip>
                             </>
                           )}
                           {order.status === 'checked_in' && (
-                            <Button size="sm" variant="outline" onClick={() => handleCheckOut(order.id!)}>
-                              <LogOut className="h-3 w-3" />
-                            </Button>
+                            <Tooltip content="退房">
+                              <Button size="sm" variant="outline" onClick={() => handleCheckOut(order.id!)}>
+                                <LogOut className="h-3 w-3" />
+                              </Button>
+                            </Tooltip>
                           )}
                         </div>
                       </TableCell>
