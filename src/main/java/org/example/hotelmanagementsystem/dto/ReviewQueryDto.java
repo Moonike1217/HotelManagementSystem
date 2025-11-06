@@ -16,10 +16,8 @@ public class ReviewQueryDto {
     private Integer hotelId;
     // 酒店名称
     private String hotelName;
-    // 评分（最小值）
-    private Integer minRating;
-    // 评分（最大值）
-    private Integer maxRating;
+    // 评分
+    private Integer Rating;
     // 是否有管理员回复
     private Boolean hasReply;
 }
