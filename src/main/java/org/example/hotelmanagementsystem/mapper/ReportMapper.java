@@ -17,8 +17,8 @@ public interface ReportMapper {
      * @return 预订统计列表
      */
     List<BookingStatisticsDto> getBookingStatistics(
-        @Param("startDate") String startDate,
-        @Param("endDate") String endDate,
+        @Param("startDate") Long startDate,
+        @Param("endDate") Long endDate,
         @Param("hotelId") Integer hotelId
     );
     
@@ -30,8 +30,8 @@ public interface ReportMapper {
      * @return 收入统计列表
      */
     List<RevenueStatisticsDto> getRevenueStatistics(
-        @Param("startDate") String startDate,
-        @Param("endDate") String endDate,
+        @Param("startDate") Long startDate,
+        @Param("endDate") Long endDate,
         @Param("hotelId") Integer hotelId
     );
     
@@ -43,8 +43,8 @@ public interface ReportMapper {
      * @return 入住率统计列表
      */
     List<OccupancyRateDto> getOccupancyRateStatistics(
-        @Param("startDate") String startDate,
-        @Param("endDate") String endDate,
+        @Param("startDate") Long startDate,
+        @Param("endDate") Long endDate,
         @Param("hotelId") Integer hotelId
     );
 }

@@ -8,6 +8,7 @@ import org.example.hotelmanagementsystem.dto.OccupancyRateDto;
 import org.example.hotelmanagementsystem.dto.ReportQueryDto;
 import org.example.hotelmanagementsystem.mapper.ReportMapper;
 import org.example.hotelmanagementsystem.service.ReportService;
+import org.example.hotelmanagementsystem.util.TimestampUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
@@ -22,17 +23,41 @@ public class ReportServiceImpl implements ReportService {
     
     @Override
     public List<BookingStatisticsDto> getBookingStatistics(ReportQueryDto query) {
-        return reportMapper.getBookingStatistics(query.getStartDate(), query.getEndDate(), query.getHotelId());
+        Long startTimestamp = null;
+        Long endTimestamp = null;
+        if (query.getStartDate() != null && !query.getStartDate().isEmpty()) {
+            startTimestamp = TimestampUtil.parseTimestamp(query.getStartDate() + " 00:00:00");
+        }
+        if (query.getEndDate() != null && !query.getEndDate().isEmpty()) {
+            endTimestamp = TimestampUtil.parseTimestamp(query.getEndDate() + " 23:59:59");
+        }
+        return reportMapper.getBookingStatistics(startTimestamp, endTimestamp, query.getHotelId());
     }
     
     @Override
     public List<RevenueStatisticsDto> getRevenueStatistics(ReportQueryDto query) {
-        return reportMapper.getRevenueStatistics(query.getStartDate(), query.getEndDate(), query.getHotelId());
+        Long startTimestamp = null;
+        Long endTimestamp = null;
+        if (query.getStartDate() != null && !query.getStartDate().isEmpty()) {
+            startTimestamp = TimestampUtil.parseTimestamp(query.getStartDate() + " 00:00:00");
+        }
+        if (query.getEndDate() != null && !query.getEndDate().isEmpty()) {
+            endTimestamp = TimestampUtil.parseTimestamp(query.getEndDate() + " 23:59:59");
+        }
+        return reportMapper.getRevenueStatistics(startTimestamp, endTimestamp, query.getHotelId());
     }
     
     @Override
     public List<OccupancyRateDto> getOccupancyRateStatistics(ReportQueryDto query) {
-        return reportMapper.getOccupancyRateStatistics(query.getStartDate(), query.getEndDate(), query.getHotelId());
+        Long startTimestamp = null;
+        Long endTimestamp = null;
+        if (query.getStartDate() != null && !query.getStartDate().isEmpty()) {
+            startTimestamp = TimestampUtil.parseTimestamp(query.getStartDate() + " 00:00:00");
+        }
+        if (query.getEndDate() != null && !query.getEndDate().isEmpty()) {
+            endTimestamp = TimestampUtil.parseTimestamp(query.getEndDate() + " 23:59:59");
+        }
+        return reportMapper.getOccupancyRateStatistics(startTimestamp, endTimestamp, query.getHotelId());
     }
     
     @Override
