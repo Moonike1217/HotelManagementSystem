@@ -199,7 +199,7 @@ export function Reviews() {
                   <TableHead>酒店</TableHead>
                   <TableHead>评分</TableHead>
                   <TableHead>评价内容</TableHead>
-                  <TableHead>回复</TableHead>
+                  <TableHead>回复状态</TableHead>
                   <TableHead>评价时间</TableHead>
                   <TableHead>操作</TableHead>
                 </TableRow>
@@ -211,7 +211,19 @@ export function Reviews() {
                     <TableCell>{review.hotelName}</TableCell>
                     <TableCell>{renderStars(review.rating)}</TableCell>
                     <TableCell>
-                      <div className="max-w-xs truncate">{review.comment}</div>
+                      <div className="space-y-2 max-w-md">
+                        <div className="text-sm">{review.comment}</div>
+                        {review.reply && (
+                          <div className="mt-2 pl-3 border-l-2 border-blue-400 bg-blue-50 dark:bg-blue-950 p-2 rounded-r">
+                            <div className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">
+                              管理员回复：
+                            </div>
+                            <div className="text-sm text-gray-700 dark:text-gray-300">
+                              {review.reply}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       {review.reply ? (
