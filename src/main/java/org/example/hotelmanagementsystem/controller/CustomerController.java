@@ -43,7 +43,11 @@ public class CustomerController {
      */
     @GetMapping("/id-card/{idCard}")
     public CustomerDto getCustomerByIdCard(@PathVariable String idCard) {
-        return customerService.getCustomerByIdCard(idCard);
+        CustomerDto customer = customerService.getCustomerByIdCard(idCard);
+        if (customer == null) {
+            throw new RuntimeException("未找到身份证号为 " + idCard + " 的客户");
+        }
+        return customer;
     }
     
     /**

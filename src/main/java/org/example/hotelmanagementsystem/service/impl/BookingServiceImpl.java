@@ -46,14 +46,22 @@ public class BookingServiceImpl implements BookingService {
             throw new RuntimeException("房间不存在或不可用");
         }
         
-        // 创建客户
-        Customer customer = new Customer();
-        customer.setName(bookingRequest.getCustomerName());
-        customer.setPhone(bookingRequest.getCustomerPhone());
-        customer.setEmail(bookingRequest.getCustomerEmail());
-        customer.setIdCard(bookingRequest.getCustomerIdCard());
-        customer.setCreatedAt(TimestampUtil.getCurrentTimestamp());
-        bookingMapper.insertCustomer(customer);
+        // 检查客户是否已存在，如果不存在则创建新客户
+        Customer customer = null;
+        if (bookingRequest.getCustomerIdCard() != null && !bookingRequest.getCustomerIdCard().isEmpty()) {
+            customer = bookingMapper.findCustomerByIdCard(bookingRequest.getCustomerIdCard());
+        }
+        
+        // 如果客户不存在，则创建新客户
+        if (customer == null) {
+            customer = new Customer();
+            customer.setName(bookingRequest.getCustomerName());
+            customer.setPhone(bookingRequest.getCustomerPhone());
+            customer.setEmail(bookingRequest.getCustomerEmail());
+            customer.setIdCard(bookingRequest.getCustomerIdCard());
+            customer.setCreatedAt(TimestampUtil.getCurrentTimestamp());
+            bookingMapper.insertCustomer(customer);
+        }
 
         
         // 计算天数
