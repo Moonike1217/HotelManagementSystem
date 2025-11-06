@@ -33,8 +33,8 @@ export function Login() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
             <Hotel className="h-8 w-8 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl">酒店管理系统</CardTitle>
-          <CardDescription>欢迎登录，请输入您的账号信息</CardDescription>
+          <CardTitle className="text-2xl">NJUPT酒店管理系统</CardTitle>
+          <CardDescription>欢迎使用，请输入您的账号信息</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -43,7 +43,7 @@ export function Login() {
               <Input
                 id="username"
                 type="text"
-                placeholder="请输入任意用户名"
+                placeholder="请输入用户名"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
