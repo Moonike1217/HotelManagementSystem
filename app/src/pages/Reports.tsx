@@ -97,9 +97,9 @@ export function Reports() {
     }
   };
 
-  // 计算汇总数据
-  const totalBookings = bookingStats.reduce((sum, item) => sum + item.bookingCount, 0);
-  const totalRevenue = revenueStats.reduce((sum, item) => sum + item.revenue, 0);
+  // 计算汇总数据（使用后端返回的字段）
+  const totalBookings = bookingStats.reduce((sum, item) => sum + item.totalBookings, 0);
+  const totalRevenue = revenueStats.reduce((sum, item) => sum + item.totalRevenue, 0);
   const avgOccupancy = occupancyStats.length > 0
     ? (occupancyStats.reduce((sum, item) => sum + item.occupancyRate, 0) / occupancyStats.length).toFixed(2)
     : '0.00';
@@ -205,7 +205,7 @@ export function Reports() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>预订统计</CardTitle>
-                <CardDescription>每日预订量和收入趋势</CardDescription>
+                <CardDescription>按酒店统计预订量</CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={handleExportBooking}>
                 <Download className="mr-2 h-4 w-4" />
@@ -217,11 +217,14 @@ export function Reports() {
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={bookingStats}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <XAxis dataKey="hotelName" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="bookingCount" fill="#3b82f6" name="预订量" />
+                <Bar dataKey="totalBookings" fill="#3b82f6" name="总预订数" />
+                <Bar dataKey="confirmedBookings" fill="#10b981" name="确认预订数" />
+                <Bar dataKey="checkInCount" fill="#f59e0b" name="入住数" />
+                <Bar dataKey="cancelledBookings" fill="#ef4444" name="取消数" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -235,7 +238,7 @@ export function Reports() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>收入统计</CardTitle>
-                <CardDescription>每日收入趋势</CardDescription>
+                <CardDescription>按酒店/月份统计收入</CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={handleExportRevenue}>
                 <Download className="mr-2 h-4 w-4" />
@@ -247,11 +250,12 @@ export function Reports() {
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={revenueStats}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <XAxis dataKey="hotelName" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} name="收入 (¥)" />
+                <Line type="monotone" dataKey="totalRevenue" stroke="#10b981" strokeWidth={2} name="总收入 (¥)" />
+                <Line type="monotone" dataKey="averageRoomPrice" stroke="#3b82f6" strokeWidth={2} name="平均房价 (¥)" />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -265,7 +269,7 @@ export function Reports() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>入住率统计</CardTitle>
-                <CardDescription>每日入住率变化</CardDescription>
+                <CardDescription>按酒店/日期统计入住率</CardDescription>
               </div>
               <Button variant="outline" size="sm" onClick={handleExportOccupancy}>
                 <Download className="mr-2 h-4 w-4" />
@@ -277,7 +281,7 @@ export function Reports() {
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={occupancyStats}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <XAxis dataKey={occupancyStats[0]?.date ? "date" : "hotelName"} />
                 <YAxis />
                 <Tooltip />
                 <Legend />

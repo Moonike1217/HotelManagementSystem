@@ -176,31 +176,35 @@ export interface ReportQueryDto {
   endDate?: string;
 }
 
-// 预订统计
+// 预订统计（匹配后端BookingStatisticsDto）
 export interface BookingStatisticsDto {
-  date: string;
-  hotelId: number;
-  hotelName: string;
-  bookingCount: number;
-  totalRevenue: number;
+  hotelId?: number;
+  hotelName?: string;
+  totalBookings: number;        // 总预订数
+  confirmedBookings: number;    // 确认预订数
+  checkInCount: number;         // 入住数
+  cancelledBookings: number;    // 取消数
+  bookingRate?: number;         // 预订率 (%)
+  checkInRate?: number;         // 入住率 (%)
 }
 
-// 收入统计
+// 收入统计（匹配后端RevenueStatisticsDto）
 export interface RevenueStatisticsDto {
-  date: string;
-  hotelId: number;
-  hotelName: string;
-  revenue: number;
-  orderCount: number;
+  hotelId?: number;
+  hotelName?: string;
+  month?: string;               // 月份
+  totalRevenue: number;         // 总收入（BigDecimal）
+  averageRoomPrice?: number;    // 平均房价
+  orderCount: number;           // 订单数
 }
 
-// 入住率统计
+// 入住率统计（匹配后端OccupancyRateDto）
 export interface OccupancyRateDto {
-  date: string;
-  hotelId: number;
-  hotelName: string;
-  totalRooms: number;
-  occupiedRooms: number;
-  occupancyRate: number;
+  hotelId?: number;
+  hotelName?: string;
+  date?: string;                // 日期
+  totalRooms: number;           // 总房间数
+  occupiedRooms: number;        // 已占用房间数
+  occupancyRate: number;        // 入住率 (%)
 }
 

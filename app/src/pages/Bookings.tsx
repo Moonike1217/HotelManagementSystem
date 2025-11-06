@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Calendar, MapPin } from 'lucide-react';
+import { Search, Calendar, MapPin, UserCheck, UserPlus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogBody, DialogFooter, Dia
 import { Badge } from '../components/ui/badge';
 import { Toast } from '../components/ui/toast';
 import { useToast } from '../hooks/useToast';
-import { bookingApi } from '../api';
+import { bookingApi, customerApi } from '../api';
 import type { AvailableRoomDto, BookingQueryDto, BookingRequestDto } from '../types';
 
 export function Bookings() {
@@ -18,6 +18,11 @@ export function Bookings() {
   const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<AvailableRoomDto | null>(null);
   const { toast, showToast, hideToast } = useToast();
+  
+  // 用户类型：existing 老用户，new 新用户
+  const [customerType, setCustomerType] = useState<'existing' | 'new'>('new');
+  const [searchIdCard, setSearchIdCard] = useState('');
+  const [searchingCustomer, setSearchingCustomer] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState<BookingQueryDto>({
     checkInDate: '',
@@ -53,8 +58,38 @@ export function Bookings() {
     }
   };
 
+  // 查询老用户信息
+  const handleSearchCustomer = async () => {
+    if (!searchIdCard.trim()) {
+      showToast('请输入身份证号', 'error');
+      return;
+    }
+    setSearchingCustomer(true);
+    try {
+      const response = await customerApi.getCustomerByIdCard(searchIdCard);
+      if (response.data) {
+        // 自动填充表单
+        setBookingForm({
+          ...bookingForm,
+          customerName: response.data.name || '',
+          customerPhone: response.data.phone || '',
+          customerEmail: response.data.email || '',
+          customerIdCard: response.data.idCard || '',
+        });
+        showToast('已找到客户信息', 'success');
+      }
+    } catch (error) {
+      console.error('查询客户失败:', error);
+      showToast('未找到该身份证号对应的客户信息', 'error');
+    } finally {
+      setSearchingCustomer(false);
+    }
+  };
+
   const handleBooking = (room: AvailableRoomDto) => {
     setSelectedRoom(room);
+    setCustomerType('new'); // 默认新用户
+    setSearchIdCard(''); // 清空身份证搜索框
     setBookingForm({
       roomId: room.id,  // 后端返回的字段是 id
       customerName: '',
@@ -213,57 +248,129 @@ export function Bookings() {
           <form onSubmit={handleSubmitBooking} className="flex flex-col flex-1 min-h-0">
             <DialogBody>
               <div className="grid gap-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>入住日期</Label>
-                  <Input value={bookingForm.checkInDate} disabled />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>入住日期</Label>
+                    <Input value={bookingForm.checkInDate} disabled />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>退房日期</Label>
+                    <Input value={bookingForm.checkOutDate} disabled />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>退房日期</Label>
-                  <Input value={bookingForm.checkOutDate} disabled />
+
+                {/* 用户类型选择 */}
+                <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
+                  <Label className="text-base font-semibold">客户类型</Label>
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCustomerType('new');
+                        setSearchIdCard('');
+                        setBookingForm({
+                          ...bookingForm,
+                          customerName: '',
+                          customerPhone: '',
+                          customerEmail: '',
+                          customerIdCard: '',
+                        });
+                      }}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-md border-2 transition-colors ${
+                        customerType === 'new'
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : 'border-muted-foreground/30 hover:border-muted-foreground/50'
+                      }`}
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      新客户
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCustomerType('existing')}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-md border-2 transition-colors ${
+                        customerType === 'existing'
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : 'border-muted-foreground/30 hover:border-muted-foreground/50'
+                      }`}
+                    >
+                      <UserCheck className="h-4 w-4" />
+                      老客户
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="customerName">客户姓名 *</Label>
-                  <Input
-                    id="customerName"
-                    value={bookingForm.customerName}
-                    onChange={(e) => setBookingForm({ ...bookingForm, customerName: e.target.value })}
-                    required
-                  />
+
+                {/* 老客户查询 */}
+                {customerType === 'existing' && (
+                  <div className="space-y-2 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <Label htmlFor="searchIdCard" className="text-blue-900 dark:text-blue-100">
+                      通过身份证号查询客户信息
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="searchIdCard"
+                        placeholder="请输入身份证号"
+                        value={searchIdCard}
+                        onChange={(e) => setSearchIdCard(e.target.value)}
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        onClick={handleSearchCustomer}
+                        disabled={searchingCustomer}
+                      >
+                        {searchingCustomer ? '查询中...' : '查询'}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* 客户信息表单 */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="customerName">客户姓名 *</Label>
+                    <Input
+                      id="customerName"
+                      value={bookingForm.customerName}
+                      onChange={(e) => setBookingForm({ ...bookingForm, customerName: e.target.value })}
+                      disabled={customerType === 'existing' && !bookingForm.customerName}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customerPhone">联系电话 *</Label>
+                    <Input
+                      id="customerPhone"
+                      value={bookingForm.customerPhone}
+                      onChange={(e) => setBookingForm({ ...bookingForm, customerPhone: e.target.value })}
+                      disabled={customerType === 'existing' && !bookingForm.customerPhone}
+                      required
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="customerPhone">联系电话 *</Label>
-                  <Input
-                    id="customerPhone"
-                    value={bookingForm.customerPhone}
-                    onChange={(e) => setBookingForm({ ...bookingForm, customerPhone: e.target.value })}
-                    required
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="customerEmail">电子邮箱 *</Label>
+                    <Input
+                      id="customerEmail"
+                      type="email"
+                      value={bookingForm.customerEmail}
+                      onChange={(e) => setBookingForm({ ...bookingForm, customerEmail: e.target.value })}
+                      disabled={customerType === 'existing' && !bookingForm.customerEmail}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customerIdCard">身份证号 *</Label>
+                    <Input
+                      id="customerIdCard"
+                      value={bookingForm.customerIdCard}
+                      onChange={(e) => setBookingForm({ ...bookingForm, customerIdCard: e.target.value })}
+                      disabled={customerType === 'existing' && !bookingForm.customerIdCard}
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="customerEmail">电子邮箱 *</Label>
-                  <Input
-                    id="customerEmail"
-                    type="email"
-                    value={bookingForm.customerEmail}
-                    onChange={(e) => setBookingForm({ ...bookingForm, customerEmail: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="customerIdCard">身份证号 *</Label>
-                  <Input
-                    id="customerIdCard"
-                    value={bookingForm.customerIdCard}
-                    onChange={(e) => setBookingForm({ ...bookingForm, customerIdCard: e.target.value })}
-                    required
-                  />
-                </div>
-              </div>
               </div>
             </DialogBody>
             <DialogFooter>
