@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogBody, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Toast } from '../components/ui/toast';
 import { useToast } from '../hooks/useToast';
 import { customerApi } from '../api';
@@ -229,14 +229,15 @@ export function Customers() {
       {/* 添加/编辑客户对话框 */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <DialogHeader>
-              <DialogTitle>{editingCustomer ? '编辑客户' : '添加客户'}</DialogTitle>
-              <DialogDescription>
-                请填写客户的基本信息
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
+          <DialogHeader>
+            <DialogTitle>{editingCustomer ? '编辑客户' : '添加客户'}</DialogTitle>
+            <DialogDescription>
+              请填写客户的基本信息
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+            <DialogBody>
+              <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="customerName">客户姓名 *</Label>
                 <Input
@@ -274,7 +275,8 @@ export function Customers() {
                   required
                 />
               </div>
-            </div>
+              </div>
+            </DialogBody>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                 取消
@@ -296,7 +298,8 @@ export function Customers() {
               查看客户的详细信息和历史订单
             </DialogDescription>
           </DialogHeader>
-          {customerDetail && (
+          <DialogBody className="flex-1 min-h-0">
+            {customerDetail && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -346,7 +349,8 @@ export function Customers() {
                 </div>
               </div>
             </div>
-          )}
+            )}
+          </DialogBody>
           <DialogFooter>
             <Button onClick={() => setIsDetailDialogOpen(false)}>关闭</Button>
           </DialogFooter>

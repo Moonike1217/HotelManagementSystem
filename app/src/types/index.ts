@@ -96,12 +96,10 @@ export interface BookingQueryDto {
 
 // 可用房间信息
 export interface AvailableRoomDto {
-  roomId: number;
+  id: number;  // 后端返回的是 id 不是 roomId
   hotelId: number;
   hotelName: string;
   hotelAddress: string;
-  hotelPhone: string;
-  starLevel: number;
   roomType: string;
   roomNumber: string;
   price: number;
@@ -120,10 +118,14 @@ export interface BookingRequestDto {
 
 // 预订结果
 export interface BookingResultDto {
-  success: boolean;
-  message: string;
-  orderId?: number;
-  orderNumber?: string;
+  orderId: number;
+  orderNumber: string;
+  customerId: number;
+  roomId: number;
+  checkInDate: string;
+  checkOutDate: string;
+  totalAmount: number;
+  status: string;
 }
 
 // 评价信息

@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogBody, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Badge } from '../components/ui/badge';
 import { Toast } from '../components/ui/toast';
 import { useToast } from '../hooks/useToast';
@@ -56,7 +56,7 @@ export function Bookings() {
   const handleBooking = (room: AvailableRoomDto) => {
     setSelectedRoom(room);
     setBookingForm({
-      roomId: room.roomId,
+      roomId: room.id,  // 后端返回的字段是 id
       customerName: '',
       customerPhone: '',
       customerEmail: '',
@@ -71,13 +71,14 @@ export function Bookings() {
     e.preventDefault();
     try {
       const response = await bookingApi.bookRoom(bookingForm);
-      if (response.data.success) {
+      // 后端返回 BookingResultDto，只要有 orderNumber 就表示成功
+      if (response.data && response.data.orderNumber) {
         showToast(`预订成功！订单号：${response.data.orderNumber}`, 'success');
         setIsBookingDialogOpen(false);
         // 重新搜索可用房间
         handleSearch();
       } else {
-        showToast(response.data.message || '预订失败', 'error');
+        showToast('预订失败，请稍后重试', 'error');
       }
     } catch (error) {
       console.error('预订失败:', error);
@@ -165,7 +166,6 @@ export function Bookings() {
               <TableHeader>
                 <TableRow>
                   <TableHead>酒店名称</TableHead>
-                  <TableHead>星级</TableHead>
                   <TableHead>地址</TableHead>
                   <TableHead>房型</TableHead>
                   <TableHead>房间号</TableHead>
@@ -175,11 +175,8 @@ export function Bookings() {
               </TableHeader>
               <TableBody>
                 {availableRooms.map((room) => (
-                  <TableRow key={`${room.roomId}-${room.hotelId}`}>
+                  <TableRow key={`${room.id}-${room.hotelId}`}>
                     <TableCell className="font-medium">{room.hotelName}</TableCell>
-                    <TableCell>
-                      <Badge variant="secondary">{room.starLevel}星</Badge>
-                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <MapPin className="h-3 w-3" />
@@ -207,14 +204,15 @@ export function Bookings() {
 
       <Dialog open={isBookingDialogOpen} onOpenChange={setIsBookingDialogOpen}>
         <DialogContent className="max-w-2xl">
-          <form onSubmit={handleSubmitBooking}>
-            <DialogHeader>
-              <DialogTitle>预订房间</DialogTitle>
-              <DialogDescription>
-                {selectedRoom && `${selectedRoom.hotelName} - ${selectedRoom.roomType} ${selectedRoom.roomNumber}`}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
+          <DialogHeader>
+            <DialogTitle>预订房间</DialogTitle>
+            <DialogDescription>
+              {selectedRoom && `${selectedRoom.hotelName} - ${selectedRoom.roomType} ${selectedRoom.roomNumber}`}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmitBooking} className="flex flex-col flex-1 min-h-0">
+            <DialogBody>
+              <div className="grid gap-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>入住日期</Label>
@@ -266,7 +264,8 @@ export function Bookings() {
                   />
                 </div>
               </div>
-            </div>
+              </div>
+            </DialogBody>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setIsBookingDialogOpen(false)}>
                 取消
