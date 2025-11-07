@@ -43,8 +43,8 @@ public interface ReportMapper {
      * @return 入住率统计列表
      */
     List<OccupancyRateDto> getOccupancyRateStatistics(
-        @Param("startDate") Long startDate,
-        @Param("endDate") Long endDate,
+        @Param("startDate") String startDate,
+        @Param("endDate") String endDate,
         @Param("hotelId") Integer hotelId
     );
 }

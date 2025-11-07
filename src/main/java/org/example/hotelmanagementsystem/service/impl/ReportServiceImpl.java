@@ -49,15 +49,7 @@ public class ReportServiceImpl implements ReportService {
     
     @Override
     public List<OccupancyRateDto> getOccupancyRateStatistics(ReportQueryDto query) {
-        Long startTimestamp = null;
-        Long endTimestamp = null;
-        if (query.getStartDate() != null && !query.getStartDate().isEmpty()) {
-            startTimestamp = TimestampUtil.parseTimestamp(query.getStartDate() + " 00:00:00");
-        }
-        if (query.getEndDate() != null && !query.getEndDate().isEmpty()) {
-            endTimestamp = TimestampUtil.parseTimestamp(query.getEndDate() + " 23:59:59");
-        }
-        return reportMapper.getOccupancyRateStatistics(startTimestamp, endTimestamp, query.getHotelId());
+        return reportMapper.getOccupancyRateStatistics(query.getStartDate(), query.getEndDate(), query.getHotelId());
     }
     
     @Override
