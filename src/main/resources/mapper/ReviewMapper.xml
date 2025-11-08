@@ -66,7 +66,7 @@
     </update>
 
     <update id="replyToReview">
-        UPDATE reviews SET admin_reply = #{reply} WHERE id = #{id}
+        UPDATE reviews SET reply = #{reply} WHERE id = #{id}
     </update>
 
     <delete id="deleteReview" parameterType="java.lang.Integer">

@@ -47,10 +47,10 @@ public interface ReviewMapper {
     /**
      * 回复评价
      * @param id 评价ID
-     * @param adminReply 管理员回复
+     * @param reply 管理员回复
      * @return 影响行数
      */
-    int replyToReview(@Param("id") Integer id, @Param("reply") String adminReply);
+    int replyToReview(@Param("id") Integer id, @Param("reply") String reply);
     
     /**
      * 删除评价
