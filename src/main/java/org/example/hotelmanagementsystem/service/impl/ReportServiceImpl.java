@@ -9,6 +9,8 @@ import org.example.hotelmanagementsystem.dto.ReportQueryDto;
 import org.example.hotelmanagementsystem.mapper.ReportMapper;
 import org.example.hotelmanagementsystem.service.ReportService;
 import org.example.hotelmanagementsystem.util.TimestampUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
@@ -18,11 +20,14 @@ import java.util.List;
 @Service
 public class ReportServiceImpl implements ReportService {
     
+    private static final Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
+    
     @Autowired
     private ReportMapper reportMapper;
     
     @Override
     public List<BookingStatisticsDto> getBookingStatistics(ReportQueryDto query) {
+        logger.info("获取预订统计信息，查询条件: {}", query);
         Long startTimestamp = null;
         Long endTimestamp = null;
         if (query.getStartDate() != null && !query.getStartDate().isEmpty()) {
@@ -31,11 +36,14 @@ public class ReportServiceImpl implements ReportService {
         if (query.getEndDate() != null && !query.getEndDate().isEmpty()) {
             endTimestamp = TimestampUtil.parseTimestamp(query.getEndDate() + " 23:59:59");
         }
-        return reportMapper.getBookingStatistics(startTimestamp, endTimestamp, query.getHotelId());
+        List<BookingStatisticsDto> result = reportMapper.getBookingStatistics(startTimestamp, endTimestamp, query.getHotelId());
+        logger.debug("预订统计查询完成，结果数: {}", result.size());
+        return result;
     }
     
     @Override
     public List<RevenueStatisticsDto> getRevenueStatistics(ReportQueryDto query) {
+        logger.info("获取收入统计信息，查询条件: {}", query);
         Long startTimestamp = null;
         Long endTimestamp = null;
         if (query.getStartDate() != null && !query.getStartDate().isEmpty()) {
@@ -44,16 +52,22 @@ public class ReportServiceImpl implements ReportService {
         if (query.getEndDate() != null && !query.getEndDate().isEmpty()) {
             endTimestamp = TimestampUtil.parseTimestamp(query.getEndDate() + " 23:59:59");
         }
-        return reportMapper.getRevenueStatistics(startTimestamp, endTimestamp, query.getHotelId());
+        List<RevenueStatisticsDto> result = reportMapper.getRevenueStatistics(startTimestamp, endTimestamp, query.getHotelId());
+        logger.debug("收入统计查询完成，结果数: {}", result.size());
+        return result;
     }
     
     @Override
     public List<OccupancyRateDto> getOccupancyRateStatistics(ReportQueryDto query) {
-        return reportMapper.getOccupancyRateStatistics(query.getStartDate(), query.getEndDate(), query.getHotelId());
+        logger.info("获取入住率统计信息，查询条件: {}", query);
+        List<OccupancyRateDto> result = reportMapper.getOccupancyRateStatistics(query.getStartDate(), query.getEndDate(), query.getHotelId());
+        logger.debug("入住率统计查询完成，结果数: {}", result.size());
+        return result;
     }
     
     @Override
     public String exportBookingStatisticsToExcel(ReportQueryDto query) throws IOException {
+        logger.info("导出预订统计报表到Excel，查询条件: {}", query);
         List<BookingStatisticsDto> dataList = getBookingStatistics(query);
         
         Workbook workbook = new XSSFWorkbook();
@@ -98,11 +112,13 @@ public class ReportServiceImpl implements ReportService {
         workbook.close();
         outputStream.close();
         
+        logger.info("预订统计报表导出完成，文件路径: {}", filePath);
         return filePath;
     }
     
     @Override
     public String exportRevenueStatisticsToExcel(ReportQueryDto query) throws IOException {
+        logger.info("导出收入统计报表到Excel，查询条件: {}", query);
         List<RevenueStatisticsDto> dataList = getRevenueStatistics(query);
         
         Workbook workbook = new XSSFWorkbook();
@@ -145,11 +161,13 @@ public class ReportServiceImpl implements ReportService {
         workbook.close();
         outputStream.close();
         
+        logger.info("收入统计报表导出完成，文件路径: {}", filePath);
         return filePath;
     }
     
     @Override
     public String exportOccupancyRateStatisticsToExcel(ReportQueryDto query) throws IOException {
+        logger.info("导出入住率统计报表到Excel，查询条件: {}", query);
         List<OccupancyRateDto> dataList = getOccupancyRateStatistics(query);
         
         Workbook workbook = new XSSFWorkbook();
@@ -192,6 +210,7 @@ public class ReportServiceImpl implements ReportService {
         workbook.close();
         outputStream.close();
         
+        logger.info("入住率统计报表导出完成，文件路径: {}", filePath);
         return filePath;
     }
     
